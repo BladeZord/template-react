@@ -1,0 +1,15 @@
+  header: {
+    title: 'Template React',
+    showLogo: true,
+    logo: <img src="/vite.svg" alt="Logo" style={{ height: 28 }} />,
+    showUser: true,
+    fixed: true,
+    userMenu: {
+      label: 'Usuario',
+      items: [
+        { key: 'profile', label: 'Mi perfil' },
+        { key: 'settings', label: 'Configuración' },
+        { key: 'logout', label: 'Cerrar sesión' },
+      ],
+    },
+  },
