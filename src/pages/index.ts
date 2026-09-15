@@ -1,5 +1,0 @@
-export { HomePage } from './HomePage'
-export { DashboardPage } from './DashboardPage'
-export { Page1 } from './Page1'
-export { Page2 } from './Page2'
-export { SettingsPage } from './SettingsPage'

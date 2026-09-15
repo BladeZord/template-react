@@ -11,12 +11,12 @@ lerna-debug.log*
 node_modules
 .pnp
 .pnp.js
-package-lock.json
 
 # Build
 dist
 dist-ssr
 *.local
+*.tsbuildinfo
 
 # Editor
 .vscode/*

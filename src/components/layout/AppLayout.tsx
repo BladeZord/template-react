@@ -1,97 +1,90 @@
-import { useState, useMemo } from 'react'
-import { Layout, Typography } from 'antd'
-import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons'
-import { useMatches } from 'react-router-dom'
-import { AppMenu } from './AppMenu'
-import { AppHeader } from './AppHeader'
+import { Suspense, useState } from 'react'
+import { ProLayout, PageContainer } from '@ant-design/pro-components'
+import { Outlet, useLocation, useNavigate, Link } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
+import { Dropdown, Spin, Button, Tooltip } from 'antd'
+import {
+  SettingOutlined,
+  UserOutlined,
+  LogoutOutlined,
+  ProfileOutlined,
+} from '@ant-design/icons'
+import { appConfig } from '@/config/app.config'
+import { menuData, buildMenuTree } from '@/config/menu.config'
+import { useLayoutStore } from '@/store/layout.store'
 import { AppFooter } from './AppFooter'
-import { AppBreadcrumb } from './AppBreadcrumb'
-import { appConfig } from '@/config'
-import { Outlet } from 'react-router-dom'
-import type { RouteData } from '@/routes/types'
-
-const { Sider, Content } = Layout
-const { Title } = Typography
+import { AppSettingsDrawer } from './AppSettingsDrawer'
 
 export function AppLayout() {
-  const [collapsed, setCollapsed] = useState(appConfig.menu.collapsed ?? false)
-  const {
-    sidebarWidth = 256,
-    sidebarCollapsedWidth = 80,
-    contentStyle,
-  } = appConfig.layout
+  const { t } = useTranslation()
+  const location = useLocation()
+  const navigate = useNavigate()
+  const { collapsed, setCollapsed } = useLayoutStore()
+  const [settingsOpen, setSettingsOpen] = useState(false)
 
-  const siderWidth = useMemo(
-    () => (collapsed ? sidebarCollapsedWidth : sidebarWidth),
-    [collapsed, sidebarCollapsedWidth, sidebarWidth]
-  )
+  // Traduce el árbol de menú en cada render (cambia si cambia el idioma).
+  // Este mismo árbol alimenta el menú lateral, el breadcrumb y el título
+  // de página — ProLayout/PageContainer los derivan solos comparando
+  // `path` contra la URL actual.
+  const translatedMenu = buildMenuTree(menuData, t)
 
-  const matches = useMatches()
-  const routeData = (matches.at(-1)?.handle as RouteData | undefined) ?? null
+  const userMenuItems = [
+    { key: 'profile', icon: <ProfileOutlined />, label: t('header.profile') },
+    { type: 'divider' as const },
+    { key: 'logout', icon: <LogoutOutlined />, label: t('header.logout') },
+  ]
 
   return (
-    <Layout style={{ minHeight: '100vh' }}>
-      <Sider
-        width={sidebarWidth}
-        collapsedWidth={sidebarCollapsedWidth}
+    <>
+      <ProLayout
+        title={appConfig.appName}
+        logo={false}
+        route={{ path: '/', children: translatedMenu }}
+        location={location}
+        menuItemRender={(item, defaultDom) =>
+          item.path ? <Link to={item.path}>{defaultDom}</Link> : defaultDom
+        }
+        onMenuHeaderClick={() => navigate('/')}
         collapsed={collapsed}
         onCollapse={setCollapsed}
-        trigger={
-          <div
-            style={{
-              height: 48,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              cursor: 'pointer',
-              fontSize: 16,
-            }}
-            onClick={() => setCollapsed(!collapsed)}
-          >
-            {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-          </div>
-        }
-        style={{
-          overflow: 'auto',
-          height: '100vh',
-          position: 'fixed',
-          left: 0,
-          top: 0,
-          bottom: 0,
-          zIndex: 100,
+        siderWidth={appConfig.layout.siderWidth}
+        fixedHeader={appConfig.layout.fixedHeader}
+        breakpoint={appConfig.layout.breakpoint}
+        contentStyle={appConfig.layout.contentStyle}
+        avatarProps={{
+          icon: <UserOutlined />,
+          title: t('header.user'),
+          render: (_avatarProps, defaultDom) => (
+            <Dropdown menu={{ items: userMenuItems }} placement="bottomRight">
+              {defaultDom}
+            </Dropdown>
+          ),
         }}
+        actionsRender={() => [
+          <Tooltip key="settings" title={t('settingsDrawer.title')}>
+            <Button
+              type="text"
+              icon={<SettingOutlined />}
+              onClick={() => setSettingsOpen(true)}
+              aria-label={t('settingsDrawer.title')}
+            />
+          </Tooltip>,
+        ]}
+        footerRender={() => <AppFooter />}
       >
-        <div
-          style={{
-            height: 64,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: collapsed ? 'center' : 'flex-start',
-            padding: collapsed ? 0 : '0 24px',
-            borderBottom: '1px solid rgba(5, 5, 5, 0.06)',
-          }}
-        >
-          {!collapsed && (
-            <span style={{ fontWeight: 600, fontSize: 16 }}>{appConfig.appName}</span>
-          )}
-        </div>
-        <AppMenu />
-      </Sider>
-      <Layout style={{ marginLeft: siderWidth, minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-        <AppHeader />
-        <Content style={{ flex: 1, ...contentStyle }}>
-          {routeData?.urls?.length ? (
-            <AppBreadcrumb urls={routeData.urls} />
-          ) : null}
-          {routeData?.title ? (
-            <Title level={2} style={{ marginTop: 0, marginBottom: 24 }}>
-              {routeData.title}
-            </Title>
-          ) : null}
-          <Outlet />
-        </Content>
-        <AppFooter />
-      </Layout>
-    </Layout>
+        <PageContainer>
+          <Suspense
+            fallback={
+              <div style={{ display: 'flex', justifyContent: 'center', padding: 48 }}>
+                <Spin size="large" />
+              </div>
+            }
+          >
+            <Outlet />
+          </Suspense>
+        </PageContainer>
+      </ProLayout>
+      <AppSettingsDrawer open={settingsOpen} onClose={() => setSettingsOpen(false)} />
+    </>
   )
 }

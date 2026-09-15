@@ -71,6 +71,29 @@ El **AppBreadcrumb** se vincula al router y usa `urls` de la ruta activa.
 - Ant Design 5
 - React Router 6
 
+### Sistema de colores y apariencia
+
+- `layout.theme`/color primario/idioma se controlan en runtime desde `src/store/theme.store.ts` (Zustand + `persist`, guardado en localStorage).
+- El panel de ajustes (`AppSettingsDrawer`, ícono de engranaje en el header) deja cambiar tema claro/oscuro, color primario (presets en `src/config/theme.config.ts`) e idioma sin recargar.
+- `AppProviders.tsx` combina esos stores con `ConfigProvider` de AntD (`algorithm` + `token.colorPrimary`) — todos los componentes de AntD se recalculan solos, sin CSS a mano.
+
+### Menú, header, breadcrumb y subheader
+
+- Migrado a `@ant-design/pro-components` (`ProLayout` + `PageContainer`). `AppMenu`, `AppHeader` y `AppBreadcrumb` ya no existen — ProLayout los resuelve.
+- `src/config/menu.config.tsx` es la única fuente de verdad: alimenta menú, breadcrumb y título de página (PageContainer los deriva solo comparando `path` con la URL).
+- Responsive (colapso/Drawer en móvil) lo maneja ProLayout de forma nativa vía la prop `breakpoint`.
+- El estado de colapso del sidebar persiste (`src/store/layout.store.ts`, Zustand).
+
+### Integraciones añadidas
+
+- **React Query** (`src/lib/queryClient.ts`, ejemplo en `src/hooks/useExampleQuery.ts` usado en `DashboardPage`).
+- **i18n** (`react-i18next`, locales en `src/i18n/locales/es.json` y `en.json`; detecta y persiste el idioma).
+- **Zustand** (`theme.store.ts`, `layout.store.ts`, ambos con `persist`).
+
+### Trade-off conocido
+
+- El bundle principal creció a ~1.18 MB (gzip ~380 KB) por `pro-components`. Es esperable: es una librería grande a cambio de resolver menú+header+breadcrumb+responsive sin código propio. Si en algún punto pesa demasiado, la alternativa es volver al `AppMenu`/`AppHeader` a mano (versión anterior) o cargar `pro-components` de forma diferida.
+
 ---
 
 ## Origen de la plantilla

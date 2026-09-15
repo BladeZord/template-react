@@ -1,42 +1,42 @@
-import { Layout, Typography, Space } from 'antd'
-import { appConfig } from '@/config'
+import { Typography, Space, theme as antTheme } from 'antd'
+import { useTranslation } from 'react-i18next'
+import { appConfig } from '@/config/app.config'
 
-const { Footer: AntFooter } = Layout
 const { Text } = Typography
 
 export function AppFooter() {
-  const { footer } = appConfig
+  const { t } = useTranslation()
+  const { token } = antTheme.useToken()
+
+  const links = [
+    { key: 'privacy', label: t('footer.privacy') },
+    { key: 'terms', label: t('footer.terms') },
+    { key: 'help', label: t('footer.help') },
+  ]
 
   return (
-    <AntFooter
+    <div
       style={{
         textAlign: 'center',
-        background: '#f0f2f5',
+        background: token.colorBgLayout,
         padding: '16px 24px',
       }}
     >
       <Space direction="vertical" size={4} style={{ width: '100%' }}>
-        {footer.links && footer.links.length > 0 && (
-          <Space split={<span style={{ color: '#bfbfbf' }}>|</span>}>
-            {footer.links.map((link) => (
-              <a key={link.key} href={link.href ?? '#'}>
-                {link.label}
-              </a>
-            ))}
-          </Space>
-        )}
-        {footer.copyright && (
-          <Text type="secondary" style={{ fontSize: 13 }}>
-            {footer.copyright}
-          </Text>
-        )}
-        {footer.showBuiltWith && (
-          <Text type="secondary" style={{ fontSize: 12 }}>
-            React · TypeScript · Ant Design · Vite
-          </Text>
-        )}
-        {footer.extra}
+        <Space split={<span style={{ color: token.colorBorder }}>|</span>}>
+          {links.map((link) => (
+            <a key={link.key} href="#">
+              {link.label}
+            </a>
+          ))}
+        </Space>
+        <Text type="secondary" style={{ fontSize: 13 }}>
+          {t('footer.copyright', { year: new Date().getFullYear(), appName: appConfig.appName })}
+        </Text>
+        <Text type="secondary" style={{ fontSize: 12 }}>
+          {t('footer.builtWith')}
+        </Text>
       </Space>
-    </AntFooter>
+    </div>
   )
 }

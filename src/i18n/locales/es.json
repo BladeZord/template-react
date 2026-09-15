@@ -1,0 +1,50 @@
+{
+  "app": { "name": "Template React" },
+  "menu": {
+    "home": "Inicio",
+    "dashboard": "Dashboard",
+    "content": "Contenido",
+    "page1": "Página 1",
+    "page1_1": "Página 1.1",
+    "page1_2": "Página 1.2",
+    "page2": "Página 2",
+    "settings": "Configuración"
+  },
+  "header": {
+    "user": "Usuario",
+    "profile": "Mi perfil",
+    "settings": "Configuración",
+    "logout": "Cerrar sesión",
+    "openMenu": "Abrir menú"
+  },
+  "footer": {
+    "copyright": "© {{year}} {{appName}}. Todos los derechos reservados.",
+    "privacy": "Privacidad",
+    "terms": "Términos",
+    "help": "Ayuda",
+    "builtWith": "React · TypeScript · Ant Design · Vite"
+  },
+  "home": {
+    "welcome": "Bienvenido al Template",
+    "description": "Contenido de ejemplo. Añade aquí tus vistas y lógica. Las rutas y el menú se configuran en menu.config.tsx."
+  },
+  "notFound": {
+    "title": "404",
+    "subtitle": "La página que buscas no existe.",
+    "backHome": "Volver al inicio"
+  },
+  "settingsDrawer": {
+    "title": "Ajustes de apariencia",
+    "theme": "Tema",
+    "light": "Claro",
+    "dark": "Oscuro",
+    "primaryColor": "Color principal",
+    "language": "Idioma"
+  },
+  "dashboard": {
+    "exampleQueryTitle": "Datos de ejemplo (React Query)",
+    "loading": "Cargando datos...",
+    "error": "Ocurrió un error al cargar los datos.",
+    "refresh": "Recargar"
+  }
+}

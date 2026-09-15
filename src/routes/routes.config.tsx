@@ -1,74 +1,19 @@
-import type { RouteItemConfig } from './types'
-import {
-  HomePage,
-  DashboardPage,
-  Page1,
-  Page2,
-  SettingsPage,
-} from '@/pages'
+import { lazy } from 'react'
+import type { ComponentType } from 'react'
 
 /**
- * Configuración de rutas por módulo.
- * Cada entrada define path, data (title + urls breadcrumb) y component.
- * El title se usa en el layout; las vistas no lo definen.
- * urls soporta N niveles.
+ * Mapa `path -> componente`, cargado de forma diferida (code-splitting).
+ * Los paths deben coincidir exactamente con los `path` definidos en
+ * `src/config/menu.config.tsx`. Si agregas un nodo de menú con `path`
+ * y no lo registras aquí, `routes/index.tsx` lanzará un error en build
+ * (mejor eso que un 404 silencioso en producción).
  */
-export const routesConfig: RouteItemConfig[] = [
-  {
-    index: true,
-    data: {
-      title: 'Bienvenido al Template',
-      urls: [{ title: 'Inicio' }],
-    },
-    component: HomePage,
-  },
-  {
-    path: 'dashboard',
-    data: {
-      title: 'Dashboard',
-      urls: [{ title: 'Inicio', path: '/' }, { title: 'Dashboard' }],
-    },
-    component: DashboardPage,
-  },
-  {
-    path: 'page1',
-    data: {
-      title: 'Página 1',
-      urls: [
-        { title: 'Inicio', path: '/' },
-        { title: 'Contenido' },
-        { title: 'Página 1' },
-      ],
-    },
-    component: Page1,
-  },
-  {
-    path: 'page2',
-    data: {
-      title: 'Página 2',
-      urls: [
-        { title: 'Inicio', path: '/' },
-        { title: 'Contenido' },
-        { title: 'Página 2' },
-      ],
-    },
-    component: Page2,
-  },
-  {
-    path: 'settings',
-    data: {
-      title: 'Configuración',
-      urls: [{ title: 'Inicio', path: '/' }, { title: 'Configuración' }],
-    },
-    component: SettingsPage,
-  },
-  // Ejemplo módulo "cargo" (descomenta y añade CargoComponent):
-  // {
-  //   path: 'cargo',
-  //   data: {
-  //     title: 'Gestión de cargos',
-  //     urls: [{ title: 'Administración' }, { title: 'Gestión de cargos' }],
-  //   },
-  //   component: CargoComponent,
-  // },
-]
+export const pageComponents: Record<string, ComponentType> = {
+  '/': lazy(() => import('@/pages/HomePage').then((m) => ({ default: m.HomePage }))),
+  '/dashboard': lazy(() => import('@/pages/DashboardPage').then((m) => ({ default: m.DashboardPage }))),
+  '/page1': lazy(() => import('@/pages/Page1').then((m) => ({ default: m.Page1 }))),
+  '/page1-1': lazy(() => import('@/pages/Page1_1').then((m) => ({ default: m.Page1_1 }))),
+  '/page1-2': lazy(() => import('@/pages/Page1_2').then((m) => ({ default: m.Page1_2 }))),
+  '/page2': lazy(() => import('@/pages/Page2').then((m) => ({ default: m.Page2 }))),
+  '/settings': lazy(() => import('@/pages/SettingsPage').then((m) => ({ default: m.SettingsPage }))),
+}

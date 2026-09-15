@@ -1,27 +1,25 @@
-# Rutas y breadcrumb
+# Rutas, menú y breadcrumb
 
-Las rutas se definen **por módulo** en `routes.config.tsx`. Cada entrada tiene:
+Una sola fuente de verdad: **`src/config/menu.config.tsx`**. De ahí sale:
 
-- **`path`** o **`index`**: ruta (o índice para `/`).
-- **`data`**: `{ title, urls }` vinculados al router.
-  - **`title`**: título de la vista (lo pinta el layout; la vista no lo define).
-  - **`urls`**: niveles del breadcrumb (soporta N niveles). `path` opcional por nivel (sin `path` = actual, no enlace).
-- **`component`**: componente de la vista.
+- El menú lateral (renderizado por `ProLayout`).
+- El breadcrumb (lo arma `PageContainer` solo, comparando `path` contra la URL actual — no se declara a mano).
+- El título de cada página (mismo mecanismo).
 
-Ejemplo:
+`src/routes/routes.config.tsx` solo mapea `path -> componente` (con `React.lazy` para code-splitting). `src/routes/index.tsx` cruza ambos archivos para generar las rutas de React Router, y falla en build si un `path` del menú no tiene componente registrado (evita rutas fantasma).
 
-```ts
-{
-  path: "cargo",
-  data: {
-    title: "Gestión de cargos",
-    urls: [
-      { title: "Administración" },
-      { title: "Gestión de cargos" },
-    ],
-  },
-  component: CargoComponent,
-}
-```
+## Para añadir una página nueva
 
-Para añadir un módulo: agrega una entrada en `routesConfig` y el componente en `pages/` (o en tu módulo).
+1. Crea el componente en `src/pages/NuevaPagina.tsx`.
+2. Agrega sus textos a `src/i18n/locales/es.json` y `en.json` (clave bajo `menu.*`).
+3. Agrega el nodo en `menu.config.tsx`:
+   ```tsx
+   { path: '/nueva-pagina', name: 'menu.nuevaPagina', icon: <StarOutlined /> }
+   ```
+   Para un submenú, anida con `children` (soporta N niveles).
+4. Registra el componente en `routes.config.tsx`:
+   ```ts
+   '/nueva-pagina': lazy(() => import('@/pages/NuevaPagina').then((m) => ({ default: m.NuevaPagina }))),
+   ```
+
+No hace falta tocar `AppLayout.tsx` ni declarar breadcrumb a mano.
