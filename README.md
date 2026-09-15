@@ -98,6 +98,14 @@ El **AppBreadcrumb** se vincula al router y usa `urls` de la ruta activa.
 
 - El bundle principal creció a ~1.18 MB (gzip ~380 KB) por `pro-components`. Es esperable: es una librería grande a cambio de resolver menú+header+breadcrumb+responsive sin código propio. Si en algún punto pesa demasiado, la alternativa es volver al `AppMenu`/`AppHeader` a mano (versión anterior) o cargar `pro-components` de forma diferida.
 
+### Tipografía, íconos y cliente HTTP
+
+- **Fuente:** `Poppins` (300/400/500/600/700), la misma que usaba el Angular original. Self-hosted vía `@fontsource/poppins` (no un `<link>` a `fonts.googleapis.com`) — sin request externo a Google, funciona offline, mejor para privacidad/rendimiento. Importada en `main.tsx`, aplicada también a los componentes de AntD vía `token.fontFamily` en `AppProviders.tsx`.
+- **Íconos:** dos sets, con propósito distinto:
+  - `@ant-design/icons` — para el "chrome" del layout (menú, botones de acción del header, iconografía que ya usa AntD internamente). Mantiene consistencia visual con los componentes de AntD.
+  - `lucide-react` — para íconos de contenido (cards, ilustraciones, estados vacíos). Es el sucesor activo de Feather, que era el set principal del Angular original (`angular-feather`) — incluso el estilo visual es casi idéntico.
+- **`axios`:** cliente HTTP único en `src/lib/api.ts`, con interceptor de auth (token desde `localStorage`, ajústalo a tu solución real) y normalización de errores. `baseURL` configurable vía `VITE_API_URL` (ver `.env.example`). Combínalo con React Query: `useQuery({ queryKey: [...], queryFn: () => api.get('/ruta').then(r => r.data) })`.
+
 ---
 
 ## Origen de la plantilla

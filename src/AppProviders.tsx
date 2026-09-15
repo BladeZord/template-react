@@ -25,7 +25,7 @@ export function AppProviders() {
   return (
     <ConfigProvider
       locale={locale}
-      theme={{ algorithm, token: { colorPrimary: primaryColor } }}
+      theme={{ algorithm, token: { colorPrimary: primaryColor, fontFamily: "'Poppins', sans-serif" } }}
     >
       <QueryClientProvider client={queryClient}>
         <RouterProvider router={router} />

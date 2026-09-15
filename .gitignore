@@ -18,6 +18,11 @@ dist-ssr
 *.local
 *.tsbuildinfo
 
+# Env
+.env
+.env.*
+!.env.example
+
 # Editor
 .vscode/*
 !.vscode/extensions.json
