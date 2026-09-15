@@ -2,6 +2,7 @@ import { Typography, Card, Form, Switch, Select } from 'antd'
 import { useTranslation } from 'react-i18next'
 import { useThemeStore } from '@/store/theme.store'
 import { useLayoutStore } from '@/store/layout.store'
+import type { MenuLayout } from '@/store/layout.store'
 import { colorPresets } from '@/config/theme.config'
 
 const { Paragraph } = Typography
@@ -9,7 +10,7 @@ const { Paragraph } = Typography
 export function SettingsPage() {
   const { t, i18n } = useTranslation()
   const { mode, toggleMode, primaryColor, setPrimaryColor } = useThemeStore()
-  const { collapsed, setCollapsed } = useLayoutStore()
+  const { collapsed, setCollapsed, layout, setLayout } = useLayoutStore()
 
   return (
     <>
@@ -19,6 +20,17 @@ export function SettingsPage() {
       </Paragraph>
       <Card title="Preferencias" style={{ maxWidth: 480 }}>
         <Form layout="vertical">
+          <Form.Item label={t('settingsDrawer.menuLayout')}>
+            <Select
+              value={layout}
+              onChange={(value: MenuLayout) => setLayout(value)}
+              options={[
+                { label: t('settingsDrawer.side'), value: 'side' },
+                { label: t('settingsDrawer.top'), value: 'top' },
+                { label: t('settingsDrawer.mix'), value: 'mix' },
+              ]}
+            />
+          </Form.Item>
           <Form.Item label="Sidebar colapsado">
             <Switch checked={collapsed} onChange={setCollapsed} />
           </Form.Item>

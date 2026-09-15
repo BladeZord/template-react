@@ -39,7 +39,11 @@
     "light": "Light",
     "dark": "Dark",
     "primaryColor": "Primary color",
-    "language": "Language"
+    "language": "Language",
+    "menuLayout": "Menu layout",
+    "side": "Sidebar",
+    "top": "Top",
+    "mix": "Mixed"
   },
   "dashboard": {
     "exampleQueryTitle": "Example data (React Query)",

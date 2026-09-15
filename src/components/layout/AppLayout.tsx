@@ -19,7 +19,7 @@ export function AppLayout() {
   const { t } = useTranslation()
   const location = useLocation()
   const navigate = useNavigate()
-  const { collapsed, setCollapsed } = useLayoutStore()
+  const { collapsed, setCollapsed, layout } = useLayoutStore()
   const [settingsOpen, setSettingsOpen] = useState(false)
 
   // Traduce el árbol de menú en cada render (cambia si cambia el idioma).
@@ -45,6 +45,7 @@ export function AppLayout() {
           item.path ? <Link to={item.path}>{defaultDom}</Link> : defaultDom
         }
         onMenuHeaderClick={() => navigate('/')}
+        layout={layout}
         collapsed={collapsed}
         onCollapse={setCollapsed}
         siderWidth={appConfig.layout.siderWidth}

@@ -83,6 +83,10 @@ El **AppBreadcrumb** se vincula al router y usa `urls` de la ruta activa.
 - `src/config/menu.config.tsx` es la única fuente de verdad: alimenta menú, breadcrumb y título de página (PageContainer los deriva solo comparando `path` con la URL).
 - Responsive (colapso/Drawer en móvil) lo maneja ProLayout de forma nativa vía la prop `breakpoint`.
 - El estado de colapso del sidebar persiste (`src/store/layout.store.ts`, Zustand).
+- **Disposición del menú (side/top/mix):** equivalente al toggle "vertical/horizontal" del Angular original, pero nativo de ProLayout (prop `layout`). Cambiable en runtime desde el panel de ajustes o `SettingsPage`, persistido en `layout.store.ts`.
+  - `side`: sidebar vertical clásico (default).
+  - `top`: todo el menú arriba, sin sidebar.
+  - `mix`: primer nivel arriba, submenú del item activo en un panel lateral.
 
 ### Integraciones añadidas
 

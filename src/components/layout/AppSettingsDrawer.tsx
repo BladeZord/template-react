@@ -2,6 +2,8 @@ import { Drawer, Space, Typography, Segmented, Select, Tooltip } from 'antd'
 import { CheckOutlined } from '@ant-design/icons'
 import { useTranslation } from 'react-i18next'
 import { useThemeStore } from '@/store/theme.store'
+import { useLayoutStore } from '@/store/layout.store'
+import type { MenuLayout } from '@/store/layout.store'
 import { colorPresets } from '@/config/theme.config'
 
 const { Text } = Typography
@@ -19,10 +21,26 @@ export interface AppSettingsDrawerProps {
 export function AppSettingsDrawer({ open, onClose }: AppSettingsDrawerProps) {
   const { t, i18n } = useTranslation()
   const { mode, setMode, primaryColor, setPrimaryColor } = useThemeStore()
+  const { layout, setLayout } = useLayoutStore()
 
   return (
     <Drawer title={t('settingsDrawer.title')} open={open} onClose={onClose} width={300}>
       <Space direction="vertical" size="large" style={{ width: '100%' }}>
+        <div>
+          <Text strong>{t('settingsDrawer.menuLayout')}</Text>
+          <Segmented
+            block
+            style={{ marginTop: 8 }}
+            value={layout}
+            onChange={(value) => setLayout(value as MenuLayout)}
+            options={[
+              { label: t('settingsDrawer.side'), value: 'side' },
+              { label: t('settingsDrawer.top'), value: 'top' },
+              { label: t('settingsDrawer.mix'), value: 'mix' },
+            ]}
+          />
+        </div>
+
         <div>
           <Text strong>{t('settingsDrawer.theme')}</Text>
           <Segmented
